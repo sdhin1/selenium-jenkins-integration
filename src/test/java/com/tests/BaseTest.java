@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.ITestContext;
@@ -28,7 +29,25 @@ public class BaseTest {
         
         System.out.println("------------- Executing tests on "+executionType.toUpperCase()+"---------------");
     	
-    	if(executionType.equalsIgnoreCase("local")) {
+        if(System.getProperty("BROWSER") != null && System.getProperty("BROWSER").equalsIgnoreCase("edge")) {
+    		
+    		System.out.println("Executing tests on browser = "+System.getProperty("BROWSER")+" using Maven parameters !!!");
+    		
+    		WebDriverManager.edgedriver().setup();
+            this.driver = new EdgeDriver();
+            this.driver.manage().window().maximize();
+            
+    	} else if(System.getProperty("BROWSER") != null && System.getProperty("BROWSER").equalsIgnoreCase("chrome")) {
+    		
+    		System.out.println("Executing tests on browser = "+System.getProperty("BROWSER")+" using Maven parameters !!!");
+    		
+    		WebDriverManager.chromedriver().setup();
+            this.driver = new ChromeDriver();
+            this.driver.manage().window().maximize();
+            
+    	} else if(executionType.equalsIgnoreCase("local")) {
+    		
+    		System.out.println("Executing tests on browser = chrome without Maven parameters !!!");
     		
     		WebDriverManager.chromedriver().setup();
             this.driver = new ChromeDriver();
@@ -37,7 +56,7 @@ public class BaseTest {
     	} else {
 
 	        if(System.getProperty("BROWSER") != null &&
-	                System.getProperty("BROWSER").equalsIgnoreCase("firefox")){
+	            System.getProperty("BROWSER").equalsIgnoreCase("firefox")){
 	        	
 	            dc = DesiredCapabilities.firefox();
 	            
